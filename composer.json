@@ -1,0 +1,25 @@
+﻿{
+    "name": "jankx/ai-chatbox-extension",
+    "description": "AI Chatbox powered by Google Gemini for nibitour.vn",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Jankx\\Extensions\\AiChatbox\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jankx\\Extensions\\AiChatbox\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Puleeno Nguyen",
+            "email": "puleeno@gmail.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}

@@ -1,0 +1,21 @@
+﻿{
+    "name": "AI Chatbox",
+    "description": "Trợ lý AI tích hợp Google Gemini, hỗ trợ khách hỏi về sản phẩm, tour và đơn hàng trên nibitour.vn.",
+    "version": "1.0.0",
+    "author": "Puleeno Nguyen",
+    "extension_id": "ai-chatbox",
+    "caller": {
+        "file": "AiChatboxExtension.php",
+        "class": "Jankx\\Extensions\\AiChatbox\\AiChatboxExtension"
+    },
+    "requirements": {
+        "php": ">=7.4"
+    },
+    "context": [
+        "frontend",
+        "admin",
+        "rest"
+    ],
+    "auto_activate": true,
+    "settings_url": "admin.php?page=jankx-ai-chatbox-settings"
+}

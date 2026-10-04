@@ -1,0 +1,759 @@
+/* ============================================================
+   Jankx AI Chatbox – chatbox.css
+   3 states: icon → pill → expanded
+   + options dropdown menu
+   + filter panel (bộ lọc tour)
+   ============================================================ */
+
+/* ---------- Custom Properties (Design Tokens) ---------- */
+.jankx-chatbox {
+    --cb-primary:       #1a5c45;
+    --cb-primary-light: #236b52;
+    --cb-primary-dark:  #103d2e;
+    --cb-accent:        #7dcc9e;
+    --cb-surface:       #ffffff;
+    --cb-bg:            #f6f7f8;
+    --cb-border:        #e8eaed;
+    --cb-text:          #1f2937;
+    --cb-text-muted:    #6b7280;
+    --cb-text-light:    #9ca3af;
+    --cb-danger:        #ef4444;
+    --cb-link:          #1a73e8;
+    --cb-shadow-sm:     0 2px 8px rgba(0,0,0,.10);
+    --cb-shadow-md:     0 8px 32px rgba(0,0,0,.16);
+    --cb-shadow-lg:     0 20px 60px rgba(0,0,0,.20);
+    --cb-radius-sm:     8px;
+    --cb-radius-md:     16px;
+    --cb-radius-lg:     24px;
+    --cb-radius-pill:   999px;
+    --cb-panel-w:       380px;
+    --cb-panel-h:       580px;
+    --cb-z:             9990;
+    --cb-transition:    0.25s cubic-bezier(.4,0,.2,1);
+}
+
+/* ---------- Base wrapper ---------- */
+.jankx-chatbox {
+    position: fixed;
+    bottom: 28px;
+    right: 24px;
+    z-index: var(--cb-z);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+/* ============================================================
+   STATE 1 – ICON BUTTON
+   ============================================================ */
+.jankx-chatbox__icon-btn {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cb-primary);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--cb-shadow-md);
+    transition: transform var(--cb-transition), box-shadow var(--cb-transition);
+    outline: none;
+    order: 2;
+}
+
+.jankx-chatbox__icon-btn:hover {
+    transform: scale(1.08);
+    box-shadow: var(--cb-shadow-lg);
+}
+
+.jankx-chatbox__icon-btn:focus-visible {
+    outline: 3px solid var(--cb-accent);
+    outline-offset: 3px;
+}
+
+.jankx-chatbox__icon-btn-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--cb-transition);
+}
+
+/* Pulse ring animation */
+.jankx-chatbox__pulse {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid var(--cb-accent);
+    opacity: 0;
+    animation: cb-pulse 2.5s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes cb-pulse {
+    0%   { transform: scale(1);    opacity: .6; }
+    70%  { transform: scale(1.35); opacity: 0;  }
+    100% { transform: scale(1.35); opacity: 0;  }
+}
+
+/* ============================================================
+   STATE 2 – PILL
+   ============================================================ */
+.jankx-chatbox__pill {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fff;
+    border: 1.5px solid var(--cb-border);
+    border-radius: var(--cb-radius-pill);
+    padding: 10px 16px 10px 20px;
+    cursor: pointer;
+    box-shadow: var(--cb-shadow-sm);
+    transition: box-shadow var(--cb-transition), transform var(--cb-transition);
+    order: 1;
+    white-space: nowrap;
+    user-select: none;
+}
+
+.jankx-chatbox__pill:hover {
+    box-shadow: var(--cb-shadow-md);
+    transform: translateY(-1px);
+}
+
+.jankx-chatbox__pill:focus-visible {
+    outline: 3px solid var(--cb-accent);
+    outline-offset: 2px;
+}
+
+.jankx-chatbox__pill-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--cb-text);
+}
+
+.jankx-chatbox__pill-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--cb-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ============================================================
+   STATE 3 – EXPANDED PANEL
+   ============================================================ */
+.jankx-chatbox__panel {
+    width: var(--cb-panel-w);
+    height: var(--cb-panel-h);
+    background: var(--cb-surface);
+    border-radius: var(--cb-radius-md);
+    box-shadow: var(--cb-shadow-lg);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform-origin: bottom right;
+    transition: opacity var(--cb-transition), transform var(--cb-transition);
+    border: 1px solid var(--cb-border);
+}
+
+/* ---------- Header ---------- */
+.jankx-chatbox__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 12px 14px 16px;
+    background: var(--cb-surface);
+    border-bottom: 1px solid var(--cb-border);
+    flex-shrink: 0;
+}
+
+.jankx-chatbox__header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.jankx-chatbox__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--cb-primary);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.jankx-chatbox__bot-name {
+    font-weight: 600;
+    font-size: 15px;
+    color: var(--cb-text);
+}
+
+.jankx-chatbox__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.jankx-chatbox__header-btn {
+    width: 34px;
+    height: 34px;
+    border: none;
+    background: transparent;
+    color: var(--cb-text-muted);
+    border-radius: var(--cb-radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--cb-transition), color var(--cb-transition);
+    outline: none;
+    position: relative;
+}
+
+.jankx-chatbox__header-btn:hover {
+    background: var(--cb-bg);
+    color: var(--cb-text);
+}
+
+.jankx-chatbox__header-btn:focus-visible {
+    outline: 2px solid var(--cb-accent);
+}
+
+.jankx-chatbox__header-btn.is-active {
+    background: var(--cb-bg);
+    color: var(--cb-primary);
+}
+
+/* ---------- Subtitle ---------- */
+.jankx-chatbox__subtitle {
+    font-size: 11px;
+    color: var(--cb-text-muted);
+    padding: 6px 16px;
+    background: var(--cb-bg);
+    border-bottom: 1px solid var(--cb-border);
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ---------- Messages ---------- */
+.jankx-chatbox__messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scroll-behavior: smooth;
+}
+
+.jankx-chatbox__messages::-webkit-scrollbar { width: 4px; }
+.jankx-chatbox__messages::-webkit-scrollbar-track { background: transparent; }
+.jankx-chatbox__messages::-webkit-scrollbar-thumb {
+    background: var(--cb-border);
+    border-radius: 4px;
+}
+
+/* Greeting */
+.jankx-chatbox__greeting {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.jankx-chatbox__greeting-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--cb-text);
+    line-height: 1.3;
+}
+
+.jankx-chatbox__greeting-desc {
+    font-size: 13px;
+    color: var(--cb-text-muted);
+}
+
+.jankx-chatbox__suggestions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.jankx-chatbox__suggestion-btn {
+    padding: 8px 16px;
+    border: 1.5px solid var(--cb-border);
+    border-radius: var(--cb-radius-pill);
+    background: var(--cb-surface);
+    color: var(--cb-text);
+    font-size: 13px;
+    cursor: pointer;
+    transition: border-color var(--cb-transition), background var(--cb-transition);
+    outline: none;
+}
+
+.jankx-chatbox__suggestion-btn:hover {
+    border-color: var(--cb-primary);
+    background: #f0faf5;
+    color: var(--cb-primary);
+}
+
+/* Chat messages */
+.jankx-chatbox__message {
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+    animation: cb-msg-in .2s ease-out;
+}
+
+@keyframes cb-msg-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.jankx-chatbox__message--user {
+    flex-direction: row-reverse;
+}
+
+.jankx-chatbox__message-bubble {
+    max-width: 78%;
+    padding: 10px 14px;
+    border-radius: var(--cb-radius-md);
+    font-size: 13.5px;
+    line-height: 1.55;
+    word-break: break-word;
+    white-space: pre-wrap;
+}
+
+.jankx-chatbox__message--user .jankx-chatbox__message-bubble {
+    background: var(--cb-primary);
+    color: #fff;
+    border-bottom-right-radius: 4px;
+}
+
+.jankx-chatbox__message--assistant .jankx-chatbox__message-bubble {
+    background: var(--cb-bg);
+    color: var(--cb-text);
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--cb-border);
+}
+
+/* Typing indicator */
+.jankx-chatbox__typing {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 10px 14px;
+    background: var(--cb-bg);
+    border-radius: var(--cb-radius-md);
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--cb-border);
+    width: fit-content;
+}
+
+.jankx-chatbox__typing-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--cb-text-muted);
+    border-radius: 50%;
+    animation: cb-typing 1.2s ease-in-out infinite;
+}
+
+.jankx-chatbox__typing-dot:nth-child(2) { animation-delay: .2s; }
+.jankx-chatbox__typing-dot:nth-child(3) { animation-delay: .4s; }
+
+@keyframes cb-typing {
+    0%, 60%, 100% { transform: translateY(0);    opacity: .4; }
+    30%            { transform: translateY(-5px); opacity: 1;  }
+}
+
+/* ---------- Input area ---------- */
+.jankx-chatbox__input-area {
+    padding: 12px 14px 10px;
+    border-top: 1px solid var(--cb-border);
+    flex-shrink: 0;
+    background: var(--cb-surface);
+}
+
+.jankx-chatbox__input-wrapper {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    background: var(--cb-surface);
+    border: 1.5px solid var(--cb-border);
+    border-radius: var(--cb-radius-pill);
+    padding: 8px 8px 8px 16px;
+    transition: border-color var(--cb-transition), box-shadow var(--cb-transition);
+}
+
+.jankx-chatbox__input-wrapper:focus-within {
+    border-color: var(--cb-primary);
+    box-shadow: 0 0 0 3px rgba(26,92,69,.10);
+}
+
+.jankx-chatbox__input {
+    flex: 1;
+    border: none;
+    outline: none;
+    resize: none;
+    font-size: 13.5px;
+    font-family: inherit;
+    color: var(--cb-text);
+    background: transparent;
+    max-height: 120px;
+    overflow-y: auto;
+    line-height: 1.5;
+}
+
+.jankx-chatbox__input::placeholder { color: var(--cb-text-light); }
+
+.jankx-chatbox__send-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: none;
+    background: var(--cb-primary);
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--cb-transition), transform var(--cb-transition);
+    flex-shrink: 0;
+    outline: none;
+}
+
+.jankx-chatbox__send-btn:disabled {
+    background: var(--cb-border);
+    color: var(--cb-text-light);
+    cursor: not-allowed;
+}
+
+.jankx-chatbox__send-btn:not(:disabled):hover {
+    background: var(--cb-primary-light);
+    transform: scale(1.05);
+}
+
+.jankx-chatbox__disclaimer {
+    font-size: 11px;
+    color: var(--cb-text-muted);
+    margin: 6px 0 0;
+    line-height: 1.4;
+}
+
+.jankx-chatbox__disclaimer strong {
+    color: var(--cb-danger);
+    font-weight: 500;
+}
+
+/* ============================================================
+   OPTIONS DROPDOWN MENU
+   ============================================================ */
+.jankx-chatbox__options-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 4px;
+    width: 260px;
+    background: var(--cb-surface);
+    border: 1px solid var(--cb-border);
+    border-radius: var(--cb-radius-md);
+    box-shadow: var(--cb-shadow-md);
+    padding: 6px 0;
+    z-index: 10;
+    transform-origin: top right;
+}
+
+.jankx-chatbox__options-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 11px 16px;
+    border: none;
+    background: transparent;
+    color: var(--cb-text);
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: background var(--cb-transition);
+    gap: 12px;
+}
+
+.jankx-chatbox__options-item:hover {
+    background: var(--cb-bg);
+}
+
+.jankx-chatbox__options-item-inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.jankx-chatbox__options-item-icon {
+    color: var(--cb-text-muted);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+}
+
+.jankx-chatbox__options-item-chevron {
+    color: var(--cb-text-muted);
+    flex-shrink: 0;
+}
+
+.jankx-chatbox__options-divider {
+    height: 1px;
+    background: var(--cb-border);
+    margin: 6px 0;
+}
+
+.jankx-chatbox__options-footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 16px 4px;
+}
+
+.jankx-chatbox__options-footer a {
+    font-size: 12px;
+    color: var(--cb-primary);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.jankx-chatbox__options-footer a:hover {
+    text-decoration: underline;
+}
+
+/* ============================================================
+   FILTER PANEL (Bộ lọc tour)
+   ============================================================ */
+.jankx-chatbox__filter-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+}
+
+.jankx-chatbox__filter-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 16px 12px;
+    border-bottom: 1px solid var(--cb-border);
+    flex-shrink: 0;
+}
+
+.jankx-chatbox__filter-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--cb-text);
+}
+
+.jankx-chatbox__filter-close {
+    border: none;
+    background: transparent;
+    color: var(--cb-primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: var(--cb-radius-sm);
+    transition: background var(--cb-transition);
+}
+
+.jankx-chatbox__filter-close:hover { background: var(--cb-bg); }
+
+.jankx-chatbox__filter-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    align-content: start;
+}
+
+.jankx-chatbox__filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.jankx-chatbox__filter-label {
+    font-size: 12px;
+    color: var(--cb-text-muted);
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.jankx-chatbox__filter-select {
+    width: 100%;
+    padding: 9px 32px 9px 12px;
+    border: 1.5px solid var(--cb-border);
+    border-radius: var(--cb-radius-sm);
+    font-size: 13px;
+    color: var(--cb-text);
+    background: var(--cb-surface) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 10px center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color var(--cb-transition);
+    outline: none;
+    font-family: inherit;
+}
+
+.jankx-chatbox__filter-select:focus {
+    border-color: var(--cb-primary);
+}
+
+.jankx-chatbox__filter-empty {
+    grid-column: 1 / -1;
+    font-size: 12px;
+    color: var(--cb-text-muted);
+    text-align: center;
+    padding: 8px 0;
+}
+
+.jankx-chatbox__filter-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-top: 1px solid var(--cb-border);
+    flex-shrink: 0;
+    gap: 12px;
+}
+
+.jankx-chatbox__filter-reset {
+    border: none;
+    background: transparent;
+    color: var(--cb-primary);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 4px 0;
+    transition: opacity var(--cb-transition);
+}
+
+.jankx-chatbox__filter-reset:hover { opacity: .7; }
+
+.jankx-chatbox__filter-apply {
+    flex: 1;
+    max-width: 160px;
+    padding: 10px 20px;
+    background: var(--cb-primary);
+    color: #fff;
+    border: none;
+    border-radius: var(--cb-radius-pill);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background var(--cb-transition);
+    font-family: inherit;
+}
+
+.jankx-chatbox__filter-apply:hover { background: var(--cb-primary-light); }
+
+/* ============================================================
+   STATE TRANSITIONS
+   ============================================================ */
+
+/* Icon state – only icon visible */
+.jankx-chatbox[data-state="icon"] .jankx-chatbox__pill,
+.jankx-chatbox[data-state="icon"] .jankx-chatbox__panel {
+    display: none;
+}
+
+/* Pill state */
+.jankx-chatbox[data-state="pill"] .jankx-chatbox__icon-btn {
+    display: none;
+}
+.jankx-chatbox[data-state="pill"] .jankx-chatbox__panel {
+    display: none;
+}
+
+/* Expanded state */
+.jankx-chatbox[data-state="expanded"] .jankx-chatbox__icon-btn,
+.jankx-chatbox[data-state="expanded"] .jankx-chatbox__pill {
+    display: none;
+}
+
+/* Panel animation */
+.jankx-chatbox[data-state="expanded"] .jankx-chatbox__panel {
+    animation: cb-panel-open .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+
+@keyframes cb-panel-open {
+    from { opacity: 0; transform: scale(.85) translateY(16px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Sub-view: filter panel replaces messages */
+.jankx-chatbox__panel:not(.show-filter) .jankx-chatbox__filter-panel {
+    display: none;
+}
+.jankx-chatbox__panel.show-filter .jankx-chatbox__messages,
+.jankx-chatbox__panel.show-filter .jankx-chatbox__input-area,
+.jankx-chatbox__panel.show-filter .jankx-chatbox__subtitle {
+    display: none;
+}
+
+/* Options menu hidden by default */
+.jankx-chatbox__options-menu {
+    display: none;
+}
+.jankx-chatbox__options-menu.is-open {
+    display: block;
+    animation: cb-menu-in .15s ease-out;
+}
+
+@keyframes cb-menu-in {
+    from { opacity: 0; transform: scale(.95) translateY(-4px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* Header-relative wrapper for the options menu */
+.jankx-chatbox__header {
+    position: relative;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 480px) {
+    .jankx-chatbox {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        border-radius: 0;
+    }
+
+    .jankx-chatbox[data-state="icon"],
+    .jankx-chatbox[data-state="pill"] {
+        left: auto;
+        bottom: 20px;
+        right: 16px;
+    }
+
+    .jankx-chatbox__panel {
+        width: 100vw;
+        height: 85dvh;
+        border-radius: var(--cb-radius-lg) var(--cb-radius-lg) 0 0;
+    }
+}
