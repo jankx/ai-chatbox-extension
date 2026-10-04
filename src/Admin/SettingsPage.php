@@ -47,7 +47,7 @@ class SettingsPage
             'jankx_ai_chatbox_provider'       => $text    + ['default' => 'gemini'],
             // Gemini
             'jankx_ai_chatbox_gemini_api_key' => $text    + ['default' => ''],
-            'jankx_ai_chatbox_gemini_model'   => $text    + ['default' => 'gemini-1.5-flash'],
+            'jankx_ai_chatbox_gemini_model'   => $text    + ['default' => 'gemini-3.8-flash'],
             // OpenAI
             'jankx_ai_chatbox_openai_api_key' => $text    + ['default' => ''],
             'jankx_ai_chatbox_openai_model'   => $text    + ['default' => 'gpt-4o-mini'],

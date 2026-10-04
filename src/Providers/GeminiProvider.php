@@ -12,7 +12,7 @@ class GeminiProvider extends AbstractAiProvider
     protected string $model;
     protected string $baseUrl = 'https://generativelanguage.googleapis.com/v1beta/models/';
 
-    public function __construct(string $apiKey, string $model = 'gemini-2.0-flash')
+    public function __construct(string $apiKey, string $model = 'gemini-3.8-flash')
     {
         parent::__construct($apiKey);
         $this->model = $model;

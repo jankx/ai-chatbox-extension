@@ -93,7 +93,7 @@ class AiProviderFactory
     {
         return new GeminiProvider(
             apiKey: get_option('jankx_ai_chatbox_gemini_api_key', ''),
-            model:  get_option('jankx_ai_chatbox_gemini_model', 'gemini-1.5-flash')
+            model:  get_option('jankx_ai_chatbox_gemini_model', 'gemini-3.8-flash')
         );
     }
 
