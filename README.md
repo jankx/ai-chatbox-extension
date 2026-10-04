@@ -353,6 +353,54 @@ add_filter('jankx_ai_chatbox_filter_options', function ($options) {
 
 ---
 
+## Huấn luyện / Cung cấp dữ liệu thật (RAG)
+
+Để AI trả lời chính xác dựa trên dữ liệu website thực tế (không cần fine-tune model), bạn nên sử dụng cơ chế nhúng dữ liệu (Context Injection) thông qua filter `jankx_ai_chatbox_before_send`. Dữ liệu sẽ được tự động đính kèm ẩn phía sau câu hỏi để AI đọc được.
+
+**Cách 1: Nhúng dữ liệu trang hiện tại**
+```php
+add_filter('jankx_ai_chatbox_before_send', function ($message, $context, $filters) {
+    // Lấy thông tin bài viết hiện tại nếu là tour
+    if (isset($context['type']) && $context['type'] === 'tour' && isset($context['url'])) {
+        $post_id = url_to_postid($context['url']);
+        if ($post_id) {
+            $title = get_the_title($post_id);
+            $content = strip_tags(get_post_field('post_content', $post_id));
+            $price = get_post_meta($post_id, '_price', true);
+            
+            // Nhúng ngầm dữ liệu
+            $message .= "\n\n--- THÔNG TIN TOUR ---\nTên: $title\nGiá: $price\nChi tiết: $content\n";
+        }
+    }
+    return $message;
+}, 10, 3);
+```
+
+**Cách 2: Truy vấn Database dựa theo câu hỏi / bộ lọc**
+```php
+add_filter('jankx_ai_chatbox_before_send', function ($message, $context, $filters) {
+    if (isset($filters['destination']) && $filters['destination'] === 'nha-trang') {
+        $tours = new WP_Query([
+            'post_type' => 'tour',
+            'tax_query' => [['taxonomy' => 'destination', 'field' => 'slug', 'terms' => 'nha-trang']],
+            'posts_per_page' => 3
+        ]);
+        
+        $message .= "\n\n--- TOUR NHA TRANG TRONG HỆ THỐNG ---\n";
+        if ($tours->have_posts()) {
+            while ($tours->have_posts()) {
+                $tours->the_post();
+                $message .= "- " . get_the_title() . " (Giá: " . get_post_meta(get_the_ID(), '_price', true) . ")\n";
+            }
+            wp_reset_postdata();
+        }
+    }
+    return $message;
+}, 10, 3);
+```
+
+---
+
 ## Hướng dẫn thêm AI Provider mới
 
 Ví dụ thêm **Anthropic Claude**:
