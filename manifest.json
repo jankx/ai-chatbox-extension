@@ -17,5 +17,7 @@
         "rest"
     ],
     "auto_activate": true,
-    "settings_url": "admin.php?page=jankx-ai-chatbox-settings"
+    "settings_url": "admin.php?page=jankx-ai-chatbox-settings",
+    "ajax_slug": "ai",
+    "ajax_namespace": "Jankx\\Extensions\\AiChatbox\\Ajax\\Controller\\"
 }
