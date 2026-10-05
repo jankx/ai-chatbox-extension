@@ -30,12 +30,16 @@ class GeminiProvider extends AbstractAiProvider
     {
         $contents = $this->buildContents($message, $history);
 
+        $generationConfig = ['maxOutputTokens' => 1024];
+
+        // Gemini 3.x đã deprecate các tham số sampling (temperature, top_p, top_k).
+        if (strpos($this->model, 'gemini-3') !== 0) {
+            $generationConfig['temperature'] = 0.7;
+        }
+
         $body = [
             'contents'         => $contents,
-            'generationConfig' => [
-                'temperature'     => 0.7,
-                'maxOutputTokens' => 1024,
-            ],
+            'generationConfig' => $generationConfig,
         ];
 
         if (!empty($systemPrompt)) {

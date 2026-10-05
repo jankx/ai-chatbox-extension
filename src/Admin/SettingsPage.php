@@ -167,11 +167,15 @@ class SettingsPage
                             <td>
                                 <select id="cb_gemini_model" name="jankx_ai_chatbox_gemini_model">
                                     <?php
-                                    $cur = get_option('jankx_ai_chatbox_gemini_model', 'gemini-1.5-flash');
+                                    $cur = get_option('jankx_ai_chatbox_gemini_model', 'gemini-3.8-flash');
                                     foreach ([
-                                        'gemini-1.5-flash'  => 'Gemini 1.5 Flash (Nhanh · Miễn phí)',
-                                        'gemini-1.5-pro'    => 'Gemini 1.5 Pro (Mạnh hơn)',
-                                        'gemini-2.0-flash'  => 'Gemini 2.0 Flash (Mới nhất)',
+                                        'gemini-3.8-flash'       => 'Gemini 3.8 Flash (Mới nhất · Mạnh nhất dòng Flash)',
+                                        'gemini-3.7-flash'       => 'Gemini 3.7 Flash (Coding · Agent · Giá ưu đãi đến 31/12/2026)',
+                                        'gemini-3.6-flash'       => 'Gemini 3.6 Flash (Tiết kiệm token · Lập kế hoạch agentic)',
+                                        'gemini-3.5-flash'       => 'Gemini 3.5 Flash (Hiệu năng frontier ổn định)',
+                                        'gemini-3.5-flash-lite'  => 'Gemini 3.5 Flash-Lite (Siêu nhanh · Xử lý hàng loạt)',
+                                        'gemini-3.1-flash-lite'  => 'Gemini 3.1 Flash-Lite (Rẻ · Quy mô lớn)',
+                                        'gemini-3.1-pro-preview' => 'Gemini 3.1 Pro Preview (Suy luận mạnh nhất · Preview)',
                                     ] as $val => $lbl):
                                         printf('<option value="%s"%s>%s</option>',
                                             esc_attr($val), selected($cur, $val, false), esc_html($lbl));

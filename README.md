@@ -242,7 +242,7 @@ Tất cả cài đặt lưu trong `wp_options`:
 | `jankx_ai_chatbox_system_prompt` | *(xem code)* | System instruction cho AI |
 | `jankx_ai_chatbox_provider` | `gemini` | Provider đang dùng |
 | `jankx_ai_chatbox_gemini_api_key` | — | API key Gemini |
-| `jankx_ai_chatbox_gemini_model` | `gemini-1.5-flash` | Model Gemini |
+| `jankx_ai_chatbox_gemini_model` | `gemini-3.8-flash` | Model Gemini |
 | `jankx_ai_chatbox_openai_api_key` | — | API key OpenAI |
 | `jankx_ai_chatbox_openai_model` | `gpt-4o-mini` | Model OpenAI |
 | `jankx_ai_chatbox_openai_base_url` | `https://api.openai.com/v1` | Base URL (đổi cho Groq, Ollama...) |
