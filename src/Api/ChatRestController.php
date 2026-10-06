@@ -3,6 +3,7 @@
 namespace Jankx\Extensions\AiChatbox\Api;
 
 use Jankx\Extensions\AiChatbox\Services\ChatService;
+use Jankx\Extensions\AiChatbox\Services\SuggestionService;
 use Jankx\Extensions\AiChatbox\Factory\AiProviderFactory;
 
 /**
@@ -113,38 +114,14 @@ class ChatRestController
 
     public function getSuggestions(\WP_REST_Request $request): \WP_REST_Response
     {
-        $page_type = $request->get_param('page_type');
-        $post_id   = (int) $request->get_param('post_id');
+        $pageType = (string) $request->get_param('page_type');
+        $postId   = (int) $request->get_param('post_id');
 
-        $map = [
-            'product' => [
-                ['label' => 'Giá & Ưu đãi',      'query' => 'Tour này giá bao nhiêu và có ưu đãi gì?'],
-                ['label' => 'Lịch khởi hành',     'query' => 'Cho tôi biết các ngày khởi hành gần nhất'],
-                ['label' => 'Chính sách đặt tour', 'query' => 'Điều kiện và chính sách đặt tour này là gì?'],
-            ],
-            'tour' => [
-                ['label' => 'Lịch trình tour',    'query' => 'Mô tả lịch trình chi tiết tour này'],
-                ['label' => 'Giá tour',            'query' => 'Tour này có các mức giá nào?'],
-                ['label' => 'Đặt tour ngay',       'query' => 'Tôi muốn đặt tour này, hướng dẫn tôi các bước'],
-            ],
-            'destination' => [
-                ['label' => 'Tour đến đây',        'query' => 'Có những tour nào đến điểm đến này?'],
-                ['label' => 'Thời điểm đẹp nhất',  'query' => 'Thời điểm nào trong năm đẹp nhất để đi?'],
-                ['label' => 'Gợi ý hành trình',    'query' => 'Gợi ý hành trình tự túc tại đây'],
-            ],
-        ];
-
-        $suggestions = $map[$page_type] ?? [
-            ['label' => 'Hỏi về trang này',  'query' => 'Tóm tắt nội dung trang này cho tôi'],
-            ['label' => 'Tour liên quan',     'query' => 'Gợi ý các tour du lịch liên quan'],
-        ];
-
-        /**
-         * Filter để tùy chỉnh suggestions theo context.
-         */
-        $suggestions = apply_filters('jankx_ai_chatbox_suggestions', $suggestions, $page_type, $post_id);
-
-        return new \WP_REST_Response(['suggestions' => $suggestions]);
+        // Map gợi ý nằm ở SuggestionService vì endpoint Ajax
+        // /jankx-ajax/ai/chat/suggestions dùng chung, tránh hai bên lệch nhau.
+        return new \WP_REST_Response([
+            'suggestions' => SuggestionService::forPage($pageType, $postId),
+        ]);
     }
 
     public function getFilterOptions(\WP_REST_Request $request): \WP_REST_Response

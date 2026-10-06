@@ -99,6 +99,10 @@ class AiChatboxExtension extends AbstractExtension
 
         wp_localize_script('jankx-ai-chatbox', 'jankxAiChatbox', [
             'restUrl'      => rest_url('jankx/v1/ai-chat'),
+            // Fast AJAX. Rỗng khi theme chưa bật /jankx-ajax – JS sẽ tự
+            // rơi về restUrl.
+            'ajaxUrl'      => function_exists('jankx_ajax_url') ? jankx_ajax_url() : '',
+            'ajaxNonce'    => wp_create_nonce('jankx_ajax'),
             'nonce'        => wp_create_nonce('wp_rest'),
             'botName'      => esc_js($bot_name),
             'systemPrompt' => esc_js($system_prompt),

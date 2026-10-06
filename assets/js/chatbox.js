@@ -15,10 +15,50 @@
     const cfg = window.jankxAiChatbox || {};
     const REST_URL    = cfg.restUrl    || '/wp-json/jankx/v1/ai-chat';
     const NONCE       = cfg.nonce      || '';
+
+    // Fast AJAX: có mặt khi theme bật /jankx-ajax. Nonce của nó khác hẳn
+    // nonce REST (action jankx_ajax vs wp_rest) – trộn hai loại sẽ 403.
+    const AJAX_URL    = cfg.ajaxUrl    || '';
+    const AJAX_NONCE  = cfg.ajaxNonce  || '';
+    const USE_AJAX    = !!AJAX_URL;
+
     const BOT_NAME    = cfg.botName    || 'Trợ lý AI';
     const SYS_PROMPT  = cfg.systemPrompt || '';
     const PAGE_CTX    = cfg.currentPage  || {};
     const I18N        = cfg.i18n || {};
+
+    /**
+     * Gọi Fast AJAX, tự rơi về REST nếu Ajax lỗi (route chưa đăng ký, 404...).
+     *
+     * @param {string} action  Action path sau base, vd 'ai/chat/suggestions'.
+     * @param {string} restPath Đường dẫn tương ứng trên REST base.
+     * @param {object} params  Query params (chỉ dùng khi gọi Ajax).
+     * @returns {Promise<object>} JSON response đã parse.
+     */
+    async function apiFetch(action, restPath, params = {}) {
+        if (USE_AJAX) {
+            const qs = new URLSearchParams(params).toString();
+            const res = await fetch(
+                `${AJAX_URL}/${action}${qs ? '?' + qs : ''}`,
+                { headers: { 'X-WP-Nonce': AJAX_NONCE } }
+            );
+
+            // Ajax trả về {success, data}; REST trả về payload thô.
+            const body = await res.json();
+            if (res.ok && body && body.success) return body.data;
+
+            throw new Error(body && body.error ? body.error : 'Ajax request failed');
+        }
+
+        const qs = new URLSearchParams(params).toString();
+        const res = await fetch(
+            `${REST_URL}${restPath}${qs ? '?' + qs : ''}`,
+            { headers: { 'X-WP-Nonce': NONCE } }
+        );
+        if (! res.ok) throw new Error('REST request failed');
+
+        return res.json();
+    }
 
     // =========================================================================
     // DOM references
@@ -339,13 +379,12 @@
         const pageType = PAGE_CTX.type || 'default';
 
         try {
-            const res = await fetch(
-                `${REST_URL}/suggestions?page_type=${pageType}`,
-                { headers: { 'X-WP-Nonce': NONCE } }
+            const data = await apiFetch(
+                'ai/chat/suggestions',
+                '/suggestions',
+                { page_type: pageType }
             );
-            if (!res.ok) return;
-            const data = await res.json();
-            if (!data.suggestions?.length) return;
+            if (! data.suggestions?.length) return;
 
             suggestContainer.innerHTML = '';
             data.suggestions.forEach(s => {
